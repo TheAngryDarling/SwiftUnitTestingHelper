@@ -51,7 +51,7 @@ open class XCExtenedTestCase: XCTestCase {
     
     
     /// URL to the project folder
-    public class var projectURL: URL  {
+    public static var projectURL: URL  {
         return self.testFilePath().projectURL
     }
     
