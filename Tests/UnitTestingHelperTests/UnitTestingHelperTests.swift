@@ -39,6 +39,7 @@ class UnitTestingHelperTests: XCExtenedTestCase {
         XCTAssertEqual(self.projectURL, projectURL)
         XCTAssertEqual(self.testsURL, testsURL)
         XCTAssertEqual(self.testTargetURL, testTargetURL)
+        XCTAssertEqual(self.testTargetName, unitTestName)
         
        
     }

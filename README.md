@@ -12,6 +12,7 @@ Provides an extended XCTestCase (XCExtenedTestCase) that gives access to helper 
 >>*   **projectURL**: URL to the current project
 >>*   **testsURL**: URL to the projects Tests folder
 >>*   **testTargetURL**: URL to the target test folder
+>>*   **testTargetName**: Returns the name of the current Test Target
 >>*   **canPrint**: Indicator if new print method should output.  This is overridable
 >>*   **canVerbosePrint**: Indicator if new verbosePrint method should output.  This is overridable
 >>*   **canDebugPrint**: Indicator if new debugPrint method should output.  This is overridable

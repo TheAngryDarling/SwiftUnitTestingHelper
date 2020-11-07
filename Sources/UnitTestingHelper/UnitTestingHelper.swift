@@ -61,6 +61,11 @@ open class XCExtenedTestCase: XCTestCase {
         return self.testFilePath().testsURL
     }
     
+    /// Returns the name ofthe Test Target
+    public static var testTargetName: String {
+        return self.testFilePath().testTargetURL.lastPathComponent
+    }
+    
     /// An indicator if we are runnning within Xcode
     ///
     /// Checks to see if the environmental variable XCTestConfigurationFilePath exists
@@ -85,6 +90,12 @@ open class XCExtenedTestCase: XCTestCase {
     public var testTargetURL: URL {
         return type(of: self).testTargetURL
     }
+    
+    /// Returns the name ofthe Test Target
+    public var testTargetName: String {
+        return type(of: self).testTargetName
+    }
+    
     /// An indicator if we are runnning within Xcode (Instance version of XCExtenedTestCase.isXcodeTesting)
     public var isXcodeTesting: Bool {
         return type(of: self).isXcodeTesting
