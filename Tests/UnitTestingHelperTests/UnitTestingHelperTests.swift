@@ -165,12 +165,84 @@ class UnitTestingHelperTests: XCExtenedTestCase {
         XCTAssertTrue(!testWithPrint.isEmpty)
         
     }
+    
+    func testAsserts() {
+        let testIntValue = 7
+        let testNotEqualValue = 100
+        let testLessThanValue = 2
+        let testGreaterThanValue = 10
+        enum Errors: Swift.Error {
+            case err
+        }
+        func throwsFunc() throws -> Int {
+            throw Errors.err
+        }
+        func nothrowsFunc() throws -> Int {
+            return testIntValue
+        }
+        
+        // Expects warning here for XCTNotThrown because its deprecated and has been renamed XCTAssertsNoThrow
+        if let _ = XCTNotThrown(try nothrowsFunc()) {
+            
+        }
+        
+        if let e = XCTAssertsThrow(try throwsFunc()) {
+            if let er = e as? Errors {
+                if case .err = er {
+                    
+                }
+            }
+        }
+        
+        if let v = XCTAssertsNoThrow(try nothrowsFunc()) {
+            
+            if XCTAsserts(v == testIntValue) {
+                
+            }
+            if XCTAssertsTrue(v == testIntValue) {
+                
+            }
+            if XCTAssertsFalse(v == testNotEqualValue) {
+                
+            }
+            
+            if XCTAssertsEqual(v, testIntValue) {
+                
+            }
+            if XCTAssertsNotEqual(v, testNotEqualValue) {
+                
+            }
+            
+            if XCTAssertsGreaterThan(v, testLessThanValue) {
+                
+            }
+            if XCTAssertsGreaterThanOrEqual(v, testLessThanValue) {
+                
+            }
+            
+            if XCTAssertsLessThan(v, testGreaterThanValue) {
+                
+            }
+            if XCTAssertsLessThanOrEqual(v, testGreaterThanValue) {
+                
+            }
+        }
+        
+        if let _ = XCTAssertsNotNil(Optional<Int>.some(testIntValue)) {
+            
+        }
+        
+        if XCTAssertsNil(Optional<Int>.none) {
+            
+        }
+    }
 
 
     static var allTests = [
         ("testPaths", testPaths),
         ("testPrints", testPrints),
         ("testVerbosePrints", testVerbosePrints),
-        ("testAnyPrints", testAnyPrints)
+        ("testAnyPrints", testAnyPrints),
+        ("testAsserts", testAsserts)
     ]
 }
