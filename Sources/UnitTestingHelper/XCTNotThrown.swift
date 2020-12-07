@@ -15,6 +15,7 @@ import XCTest
 ///   - line: Line in code being called
 ///   - onError: Callback to execute when an error is thrown
 /// - Returns: Returns nil of error thrown or results from block method
+@available(*, deprecated, renamed: "XCTAssertsNoThrow")
 @discardableResult
 public func XCTNotThrown<R>(_ block: @autoclosure () throws -> R,
                             _ message: @autoclosure () -> String = "",
