@@ -27,6 +27,17 @@ public struct UnitTestPaths {
         self.testTargetURL = testTargetURL
     }
     
+    #if swift(>=5.3)
+    /// Creates a new instance of UnitTestPaths
+    /// - Parameter path: The path to a file within the test target path
+    public init(fileInTestTargetFolder path: StaticString = #filePath) {
+        var url = URL(fileURLWithPath: "\(path)", isDirectory: false)
+        while url.deletingLastPathComponent().lastPathComponent != "Tests" && !url.path.isEmpty {
+            url = url.deletingLastPathComponent()
+        }
+        self.testTargetURL = url
+    }
+    #else
     /// Creates a new instance of UnitTestPaths
     /// - Parameter path: The path to a file within the test target path
     public init(fileInTestTargetFolder path: StaticString = #file) {
@@ -36,6 +47,7 @@ public struct UnitTestPaths {
         }
         self.testTargetURL = url
     }
+    #endif
     
     
     

@@ -6,6 +6,9 @@ class UnitTestingHelperTests: XCExtenedTestCase {
     override class func setUp() {
         super.setUp()
         initTestingFile()
+        // Testing static print to ensure we don't get
+        // swift error about calling instance method statically
+        print("Testing static print func")
     }
     
     var _canPrint: Bool = true
@@ -180,6 +183,7 @@ class UnitTestingHelperTests: XCExtenedTestCase {
         func nothrowsFunc() throws -> Int {
             return testIntValue
         }
+        func nothrowsVoidFunc() throws { }
         
         // Expects warning here for XCTNotThrown because its deprecated and has been renamed XCTAssertsNoThrow
         if let _ = XCTNotThrown(try nothrowsFunc()) {
@@ -196,6 +200,12 @@ class UnitTestingHelperTests: XCExtenedTestCase {
         
         if let v = XCTAssertsNoThrow(try nothrowsFunc()) {
             
+            // Testing new XCTAssertsNoThrow( () throws -> Void) -> Bool
+            if XCTAssertsNoThrow(try nothrowsVoidFunc()) {
+                // Testing to make sure no ambigious calls
+                XCTAssertsNoThrow(try nothrowsFunc())
+                XCTAssertsNoThrow(try nothrowsVoidFunc())
+            }
             if XCTAsserts(v == testIntValue) {
                 
             }
@@ -236,6 +246,13 @@ class UnitTestingHelperTests: XCExtenedTestCase {
             
         }
     }
+    
+    func testPrintSeparatorRename() {
+        self._canPrint = false
+        // Testing rename warning
+        self.print("Message", seperator: " ")
+        self.print("Message 2", separator: " ")
+    }
 
 
     static var allTests = [
@@ -243,6 +260,7 @@ class UnitTestingHelperTests: XCExtenedTestCase {
         ("testPrints", testPrints),
         ("testVerbosePrints", testVerbosePrints),
         ("testAnyPrints", testAnyPrints),
-        ("testAsserts", testAsserts)
+        ("testAsserts", testAsserts),
+        ("testPrintSeparatorRename", testPrintSeparatorRename)
     ]
 }

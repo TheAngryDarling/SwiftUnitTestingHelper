@@ -13,8 +13,31 @@ open class XCExtenedTestCase: XCTestCase {
     }
     //private static var testingFile: String? = nil
     private static var testingFiles: [String: UnitTestPaths] = [:]
+    #if swift(>=5.3)
     /// Used to initiate paths based on the test case file
-    /// This method shoudl be called in the setUp method 
+    /// This method shoudl be called in the setUp method
+    public class func initTestingFile(_ file: StaticString = #filePath) {
+        //print(self)
+        //testingFile = "\(file)"
+        
+        //print("\(self): \(file)")
+        //testingFiles["\(self)"] = "\(file)"
+        let strFile = "\(file)"
+        guard let testsRange = strFile.range(of: "/Tests/") else {
+            fatalError("Unable to identify 'Tests' folder in '\(strFile)'")
+        }
+        
+        guard let unitTestEnding = strFile.range(of: "/",range: testsRange.upperBound..<strFile.endIndex) else {
+            fatalError("Unable to identify TestTarget folder in '\(strFile)'")
+        }
+        
+        let testTargetPath = String(strFile[...unitTestEnding.lowerBound])
+        
+        testingFiles["\(self)"] = UnitTestPaths(testTargetPath: testTargetPath)
+    }
+    #else
+    /// Used to initiate paths based on the test case file
+    /// This method shoudl be called in the setUp method
     public class func initTestingFile(_ file: StaticString = #file) {
         //print(self)
         //testingFile = "\(file)"
@@ -34,6 +57,7 @@ open class XCExtenedTestCase: XCTestCase {
         
         testingFiles["\(self)"] = UnitTestPaths(testTargetPath: testTargetPath)
     }
+    #endif
     /// Returns the Test Target File path.
     private class func testFilePath() -> UnitTestPaths {
         guard let s = testingFiles["\(self)"] else {
@@ -152,16 +176,26 @@ open class XCExtenedTestCase: XCTestCase {
         }
     }
     
-    private func _print<Target>(_ items: [Any],
-                                seperator: String = " ",
+    private static func _print<Target>(_ items: [Any],
+                                separator: String = " ",
                                 terminator: String = "\n",
                                 to: inout Target) where Target: TextOutputStream {
-        let msg = items.map({ return "\($0)"}).joined(separator: seperator)
+        let msg = items.map({ return "\($0)"}).joined(separator: separator)
         to.write(msg + terminator)
     }
     
+    private func _print<Target>(_ items: [Any],
+                                separator: String = " ",
+                                terminator: String = "\n",
+                                to: inout Target) where Target: TextOutputStream {
+        XCExtenedTestCase._print(items,
+                                 separator: separator,
+                                 terminator: terminator,
+                                 to: &to)
+    }
+    
     private func _debugPrint<Target>(_ items: [Any],
-                                seperator: String = " ",
+                                     separator: String = " ",
                                 terminator: String = "\n",
                                 to: inout Target) where Target: TextOutputStream {
         let msg = items.map {
@@ -172,11 +206,69 @@ open class XCExtenedTestCase: XCTestCase {
             } else {
                 return String(reflecting: $0)
             }
-        }.joined(separator: seperator)
+        }.joined(separator: separator)
         
         to.write(msg + terminator)
     }
     
+    /// Prints the  message
+    ///
+    /// - Parameters:
+    ///   - items: Zero or more items to print.
+    ///   - separator: A string to print between each item. The default is a single
+    ///     space (`" "`).
+    ///   - terminator: The string to print after all items have been printed. The
+    ///     default is a newline (`"\n"`).
+    public static func print<Target>(_ items: Any...,
+                                     separator: String = " ",
+                                     terminator: String = "\n",
+                                     to stream: inout Target) where Target: TextOutputStream {
+        _print(items, separator: separator, terminator: terminator, to: &stream)
+        
+    }
+    /// Prints the  message
+    ///
+    /// - Parameters:
+    ///   - items: Zero or more items to print.
+    ///   - separator: A string to print between each item. The default is a single
+    ///     space (`" "`).
+    ///   - terminator: The string to print after all items have been printed. The
+    ///     default is a newline (`"\n"`).
+    public static func print(_ items: Any..., separator: String = " ", terminator: String = "\n") {
+        var target = STDOut()
+        _print(items, separator: separator, terminator: terminator, to: &target)
+    }
+    
+    /// Prints the  message if and only if the canPrint property returns true
+    ///
+    /// - Parameters:
+    ///   - items: Zero or more items to print.
+    ///   - separator: A string to print between each item. The default is a single
+    ///     space (`" "`).
+    ///   - terminator: The string to print after all items have been printed. The
+    ///     default is a newline (`"\n"`).
+    public func print<Target>(_ items: Any...,
+                              separator: String = " ",
+                              terminator: String = "\n",
+                              to stream: inout Target) where Target: TextOutputStream {
+        guard Thread.current.overrideCanPrint.canPrint(self.canPrint) else { return }
+        _print(items, separator: separator, terminator: terminator, to: &stream)
+        
+    }
+    /// Prints the  message if and only if the canPrint property returns true
+    ///
+    /// - Parameters:
+    ///   - items: Zero or more items to print.
+    ///   - separator: A string to print between each item. The default is a single
+    ///     space (`" "`).
+    ///   - terminator: The string to print after all items have been printed. The
+    ///     default is a newline (`"\n"`).
+    public func print(_ items: Any..., separator: String = " ", terminator: String = "\n") {
+        guard Thread.current.overrideCanPrint.canPrint(self.canPrint) else { return }
+        var target = STDOut()
+        self._print(items, separator: separator, terminator: terminator, to: &target)
+    }
+    
     /// Prints the  message if and only if the canPrint property returns true
     ///
     /// - Parameters:
@@ -185,12 +277,13 @@ open class XCExtenedTestCase: XCTestCase {
     ///     space (`" "`).
     ///   - terminator: The string to print after all items have been printed. The
     ///     default is a newline (`"\n"`).
+    @available(*, deprecated, renamed: "print", message: "The parameter seperator has changed to separator fixing spelling mistake")
     public func print<Target>(_ items: Any...,
-                              seperator: String = " ",
+                              seperator: String,
                               terminator: String = "\n",
                               to stream: inout Target) where Target: TextOutputStream {
         guard Thread.current.overrideCanPrint.canPrint(self.canPrint) else { return }
-        _print(items, seperator: seperator, terminator: terminator, to: &stream)
+        _print(items, separator: seperator, terminator: terminator, to: &stream)
         
     }
     /// Prints the  message if and only if the canPrint property returns true
@@ -201,9 +294,41 @@ open class XCExtenedTestCase: XCTestCase {
     ///     space (`" "`).
     ///   - terminator: The string to print after all items have been printed. The
     ///     default is a newline (`"\n"`).
-    public func print(_ items: Any..., seperator: String = " ", terminator: String = "\n") {
+    @available(*, deprecated, renamed: "print", message: "The parameter seperator has changed to separator fixing spelling mistake")
+    public func print(_ items: Any..., seperator: String, terminator: String = "\n") {
+        guard Thread.current.overrideCanPrint.canPrint(self.canPrint) else { return }
         var target = STDOut()
-        self._print(items, seperator: seperator, terminator: terminator, to: &target)
+        self._print(items, separator: seperator, terminator: terminator, to: &target)
+    }
+    
+    /// Prints the verbose message if and only if the canVerbosePrint property returns true
+    ///
+    /// - Parameters:
+    ///   - items: Zero or more items to print.
+    ///   - separator: A string to print between each item. The default is a single
+    ///     space (`" "`).
+    ///   - terminator: The string to print after all items have been printed. The
+    ///     default is a newline (`"\n"`).
+    public func verbosePrint<Target>(_ items: Any...,
+                                     separator: String = " ",
+                                     terminator: String = "\n",
+                                     to stream: inout Target) where Target: TextOutputStream {
+        guard Thread.current.overrideCanVerbosePrint.canPrint(self.canVerbosePrint) else { return }
+        _print(items, separator: separator, terminator: terminator, to: &stream)
+        
+    }
+    /// Prints the verbose message if and only if the canVerbosePrint property returns true
+    ///
+    /// - Parameters:
+    ///   - items: Zero or more items to print.
+    ///   - separator: A string to print between each item. The default is a single
+    ///     space (`" "`).
+    ///   - terminator: The string to print after all items have been printed. The
+    ///     default is a newline (`"\n"`).
+    public func verbosePrint(_ items: Any..., separator: String = " ", terminator: String = "\n") {
+        guard Thread.current.overrideCanVerbosePrint.canPrint(self.canVerbosePrint) else { return }
+        var target = STDOut()
+        _print(items, separator: separator, terminator: terminator, to: &target)
     }
     
     /// Prints the verbose message if and only if the canVerbosePrint property returns true
@@ -214,12 +339,13 @@ open class XCExtenedTestCase: XCTestCase {
     ///     space (`" "`).
     ///   - terminator: The string to print after all items have been printed. The
     ///     default is a newline (`"\n"`).
+    @available(*, deprecated, renamed: "verbosePrint", message: "The parameter seperator has changed to separator fixing spelling mistake")
     public func verbosePrint<Target>(_ items: Any...,
-                                     seperator: String = " ",
+                                     seperator: String,
                                      terminator: String = "\n",
                                      to stream: inout Target) where Target: TextOutputStream {
         guard Thread.current.overrideCanVerbosePrint.canPrint(self.canVerbosePrint) else { return }
-        _print(items, seperator: seperator, terminator: terminator, to: &stream)
+        _print(items, separator: seperator, terminator: terminator, to: &stream)
         
     }
     /// Prints the verbose message if and only if the canVerbosePrint property returns true
@@ -230,10 +356,42 @@ open class XCExtenedTestCase: XCTestCase {
     ///     space (`" "`).
     ///   - terminator: The string to print after all items have been printed. The
     ///     default is a newline (`"\n"`).
-    public func verbosePrint(_ items: Any..., seperator: String = " ", terminator: String = "\n") {
+    @available(*, deprecated, renamed: "verbosePrint", message: "The parameter seperator has changed to separator fixing spelling mistake")
+    public func verbosePrint(_ items: Any..., seperator: String, terminator: String = "\n") {
         guard Thread.current.overrideCanVerbosePrint.canPrint(self.canVerbosePrint) else { return }
         var target = STDOut()
-        _print(items, seperator: seperator, terminator: terminator, to: &target)
+        _print(items, separator: seperator, terminator: terminator, to: &target)
+    }
+    
+    /// Prints the verbose message if and only if the canDebugPrint property returns true
+    ///
+    /// - Parameters:
+    ///   - items: Zero or more items to print.
+    ///   - separator: A string to print between each item. The default is a single
+    ///     space (`" "`).
+    ///   - terminator: The string to print after all items have been printed. The
+    ///     default is a newline (`"\n"`).
+    public func debugPrint<Target>(_ items: Any...,
+                                   separator: String = " ",
+                                     terminator: String = "\n",
+                                     to stream: inout Target) where Target: TextOutputStream {
+        guard Thread.current.overrideCanDebugPrint.canPrint(self.canDebugPrint) else { return }
+        _debugPrint(items, separator: separator, terminator: terminator, to: &stream)
+        
+    }
+    
+    /// Prints the debug message if and only if the canDebugPrint property returns true
+    ///
+    /// - Parameters:
+    ///   - items: Zero or more items to print.
+    ///   - separator: A string to print between each item. The default is a single
+    ///     space (`" "`).
+    ///   - terminator: The string to print after all items have been printed. The
+    ///     default is a newline (`"\n"`).
+    public func debugPrint(_ items: Any..., separator: String = " ", terminator: String = "\n") {
+        guard Thread.current.overrideCanDebugPrint.canPrint(self.canDebugPrint) else { return }
+        var target = STDOut()
+        _debugPrint(items, separator: separator, terminator: terminator, to: &target)
     }
     
     /// Prints the verbose message if and only if the canDebugPrint property returns true
@@ -244,12 +402,13 @@ open class XCExtenedTestCase: XCTestCase {
     ///     space (`" "`).
     ///   - terminator: The string to print after all items have been printed. The
     ///     default is a newline (`"\n"`).
+    @available(*, deprecated, renamed: "debugPrint", message: "The parameter seperator has changed to separator fixing spelling mistake")
     public func debugPrint<Target>(_ items: Any...,
-                                     seperator: String = " ",
+                                     seperator: String,
                                      terminator: String = "\n",
                                      to stream: inout Target) where Target: TextOutputStream {
         guard Thread.current.overrideCanDebugPrint.canPrint(self.canDebugPrint) else { return }
-        _debugPrint(items, seperator: seperator, terminator: terminator, to: &stream)
+        _debugPrint(items, separator: seperator, terminator: terminator, to: &stream)
         
     }
     
@@ -261,11 +420,13 @@ open class XCExtenedTestCase: XCTestCase {
     ///     space (`" "`).
     ///   - terminator: The string to print after all items have been printed. The
     ///     default is a newline (`"\n"`).
-    public func debugPrint(_ items: Any..., seperator: String = " ", terminator: String = "\n") {
+    @available(*, deprecated, renamed: "debugPrint", message: "The parameter seperator has changed to separator fixing spelling mistake")
+    public func debugPrint(_ items: Any..., seperator: String, terminator: String = "\n") {
         guard Thread.current.overrideCanDebugPrint.canPrint(self.canDebugPrint) else { return }
         var target = STDOut()
-        _debugPrint(items, seperator: seperator, terminator: terminator, to: &target)
+        _debugPrint(items, separator: seperator, terminator: terminator, to: &target)
     }
+    
     /// Executes the given block of code while temporarily enabling canPrint
     public func withPrint(_ block: () -> Void) -> Void {
         let prevValue = Thread.current.overrideCanPrint
