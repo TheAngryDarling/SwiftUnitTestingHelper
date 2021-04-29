@@ -6,6 +6,9 @@
 
 Provides an extended XCTestCase (XCExtenedTestCase) that gives access to helper methods for printing and accessing the filesystem relative to the project.  This last part comes in handy whey testing on different platforms as files that need to be read from the filesystem can be located relative from the project or test folders instead of using absolute paths.
 
+>NOTE: As of Xcode 12.5 you must enable '**Enable Testing Search Paths**' for the **UnitTestingHelper** target.
+>This is only for Xcode 12.5+ as building directly with Swift CLI still works with no additional changes
+
 ## XCExtenedTestCase:
 ### Properties:
 >*   **isXcodeTesting**: Indicator if running withing Xcode
