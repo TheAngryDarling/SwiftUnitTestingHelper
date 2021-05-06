@@ -170,6 +170,15 @@ class UnitTestingHelperTests: XCExtenedTestCase {
     }
     
     func testAsserts() {
+        
+        func onThrowsOld(_ err: Error) {
+            print(err)
+        }
+        
+        func onThrowsNew(_ err: Error, _ file: StaticString, _ line: UInt) {
+            
+        }
+        
         let testIntValue = 7
         let testNotEqualValue = 100
         let testLessThanValue = 2
@@ -198,13 +207,13 @@ class UnitTestingHelperTests: XCExtenedTestCase {
             }
         }
         
-        if let v = XCTAssertsNoThrow(try nothrowsFunc()) {
+        if let v = XCTAssertsNoThrow(try nothrowsFunc(), onError: { e in return }) {
             
             // Testing new XCTAssertsNoThrow( () throws -> Void) -> Bool
-            if XCTAssertsNoThrow(try nothrowsVoidFunc()) {
+            if XCTAssertsNoThrow(try nothrowsVoidFunc(), onError: { e, file, line in return }) {
                 // Testing to make sure no ambigious calls
-                XCTAssertsNoThrow(try nothrowsFunc())
-                XCTAssertsNoThrow(try nothrowsVoidFunc())
+                XCTAssertsNoThrow(try nothrowsFunc(), onError: onThrowsOld)
+                XCTAssertsNoThrow(try nothrowsVoidFunc(), onError: onThrowsNew)
             }
             if XCTAsserts(v == testIntValue) {
                 
