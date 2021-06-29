@@ -194,6 +194,14 @@ class UnitTestingHelperTests: XCExtenedTestCase {
         }
         func nothrowsVoidFunc() throws { }
         
+        func nothrowsOptWithValueFunc() throws -> Int? {
+            return testIntValue
+        }
+        
+        func nothrowsOptWithoutValueFunc() throws -> Int? {
+            return nil
+        }
+        
         // Expects warning here for XCTNotThrown because its deprecated and has been renamed XCTAssertsNoThrow
         if let _ = XCTNotThrown(try nothrowsFunc()) {
             
@@ -205,6 +213,14 @@ class UnitTestingHelperTests: XCExtenedTestCase {
                     
                 }
             }
+        }
+        
+        if XCTAssertsNoThrow(try nothrowsOptWithValueFunc()) == nil {
+            XCTFail("Expected return value from XCTAssertsNoThrow")
+        }
+        
+        if XCTAssertsNoThrow(try nothrowsOptWithoutValueFunc()) != nil {
+            XCTFail("Expected nil value from XCTAssertsNoThrow")
         }
         
         if let v = XCTAssertsNoThrow(try nothrowsFunc(), onError: { e in return }) {
