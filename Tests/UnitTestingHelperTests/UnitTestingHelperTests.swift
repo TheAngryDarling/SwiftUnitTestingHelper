@@ -202,10 +202,12 @@ class UnitTestingHelperTests: XCExtenedTestCase {
             return nil
         }
         
+        #if !DOCKER_ALL_BUILD
         // Expects warning here for XCTNotThrown because its deprecated and has been renamed XCTAssertsNoThrow
         if let _ = XCTNotThrown(try nothrowsFunc()) {
             
         }
+        #endif
         
         if let e = XCTAssertsThrow(try throwsFunc()) {
             if let er = e as? Errors {
@@ -274,8 +276,10 @@ class UnitTestingHelperTests: XCExtenedTestCase {
     
     func testPrintSeparatorRename() {
         self._canPrint = false
+        #if !DOCKER_ALL_BUILD
         // Testing rename warning
         self.print("Message", seperator: " ")
+        #endif
         self.print("Message 2", separator: " ")
     }
 
