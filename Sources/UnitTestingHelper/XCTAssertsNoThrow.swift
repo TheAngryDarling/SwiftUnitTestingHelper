@@ -102,19 +102,12 @@ public func XCTAssertsNoThrow<T>(_ block: @autoclosure () throws -> T?,
                                  _ message: @autoclosure () -> String = "",
                                  file: StaticString = #filePath,
                                  line: UInt = #line,
-                                 onError: (Error, StaticString, UInt) -> Void = { _,_,_ in return }) -> T? {
-    do {
-        return try block()
-    } catch {
-        onError(error, file, line)
-        var msg: String = message()
-        if msg.isEmpty {
-            msg = "Test failed with the following error:"
-        }
-        if !msg.isEmpty { msg += "\n" }
-        msg += "\(error)"
-        XCTFail(msg, file: file, line: line)
-        return nil
+                                 onError: (Error) -> Void) -> T? {
+    return XCTAssertsNoThrow(try block(),
+                             message(),
+                             file: file,
+                             line: line) { error, _, _ in
+        onError(error)
     }
 }
 
