@@ -17,7 +17,7 @@ public func XCTAssertsGreaterThan<T>(_ expression1: @autoclosure () throws -> T,
     let e1 = try expression1()
     let e2 = try expression2()
     
-    XCTAssertGreaterThan(e1, e2, message, file: file, line: line)
+    XCTAssertGreaterThan(e1, e2, message(), file: file, line: line)
     
     return e1 > e2
 }
@@ -31,7 +31,7 @@ public func XCTAssertsGreaterThanOrEqual<T>(_ expression1: @autoclosure () throw
     let e1 = try expression1()
     let e2 = try expression2()
     
-    XCTAssertGreaterThanOrEqual(e1, e2, message, file: file, line: line)
+    XCTAssertGreaterThanOrEqual(e1, e2, message(), file: file, line: line)
     
     return e1 >= e2
 }
@@ -45,7 +45,7 @@ public func XCTAssertsLessThan<T>(_ expression1: @autoclosure () throws -> T,
     let e1 = try expression1()
     let e2 = try expression2()
     
-    XCTAssertLessThan(e1, e2, message, file: file, line: line)
+    XCTAssertLessThan(e1, e2, message(), file: file, line: line)
     
     return e1 < e2
 }
@@ -59,7 +59,7 @@ public func XCTAssertsLessThanOrEqual<T>(_ expression1: @autoclosure () throws -
     let e1 = try expression1()
     let e2 = try expression2()
     
-    XCTAssertLessThanOrEqual(e1, e2, message, file: file, line: line)
+    XCTAssertLessThanOrEqual(e1, e2, message(), file: file, line: line)
     
     return e1 <= e2
 }
@@ -73,7 +73,7 @@ public func XCTAssertsGreaterThan<T>(_ expression1: @autoclosure () throws -> T,
     let e1 = try expression1()
     let e2 = try expression2()
     
-    XCTAssertGreaterThan(e1, e2, message, file: file, line: line)
+    XCTAssertGreaterThan(e1, e2, message(), file: file, line: line)
     
     return e1 > e2
 }
@@ -87,7 +87,7 @@ public func XCTAssertsGreaterThanOrEqual<T>(_ expression1: @autoclosure () throw
     let e1 = try expression1()
     let e2 = try expression2()
     
-    XCTAssertGreaterThanOrEqual(e1, e2, message, file: file, line: line)
+    XCTAssertGreaterThanOrEqual(e1, e2, message(), file: file, line: line)
     
     return e1 >= e2
 }
@@ -101,7 +101,7 @@ public func XCTAssertsLessThan<T>(_ expression1: @autoclosure () throws -> T,
     let e1 = try expression1()
     let e2 = try expression2()
     
-    XCTAssertLessThan(e1, e2, message, file: file, line: line)
+    XCTAssertLessThan(e1, e2, message(), file: file, line: line)
     
     return e1 < e2
 }
@@ -115,7 +115,7 @@ public func XCTAssertsLessThanOrEqual<T>(_ expression1: @autoclosure () throws -
     let e1 = try expression1()
     let e2 = try expression2()
     
-    XCTAssertLessThanOrEqual(e1, e2, message, file: file, line: line)
+    XCTAssertLessThanOrEqual(e1, e2, message(), file: file, line: line)
     
     return e1 <= e2
 }

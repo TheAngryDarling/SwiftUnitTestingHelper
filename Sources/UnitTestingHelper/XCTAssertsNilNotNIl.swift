@@ -17,7 +17,7 @@ public func XCTAssertsNil<T>(_ expression: @autoclosure () throws -> T?,
                         onNotNil: (T, StaticString, UInt) -> Void = {_,_,_ in return}) rethrows -> Bool {
     let e1 = try expression()
     
-    XCTAssertNil(e1, message, file: file, line: line)
+    XCTAssertNil(e1, message(), file: file, line: line)
     if let e = e1 { onNotNil(e, file, line) }
     
     return e1 == nil
@@ -29,12 +29,12 @@ public func XCTAssertsNil<T>(_ expression: @autoclosure () throws -> T?,
                         file: StaticString = #filePath,
                         line: UInt = #line,
                         onNotNil: (T) -> Void) rethrows -> Bool {
-    return XCTAssertsNil(try expression(),
-                         message(),
-                         file: file,
-                         line: line) {val, _, _ in
-        onNotNil(val)
-    }
+    let e1 = try expression()
+    
+    XCTAssertNil(e1, message(), file: file, line: line)
+    if let e = e1 { onNotNil(e) }
+    
+    return e1 == nil
 }
 
 /// Same as its XCTAssert equivilant but will return results from the expression
@@ -45,7 +45,7 @@ public func XCTAssertsNotNil<T>(_ expression: @autoclosure () throws -> T?,
                         line: UInt = #line) rethrows -> T? {
     let e1 = try expression()
     
-    XCTAssertNotNil(e1, message, file: file, line: line)
+    XCTAssertNotNil(e1, message(), file: file, line: line)
     
     return e1
 }
@@ -59,7 +59,7 @@ public func XCTAssertsNil<T>(_ expression: @autoclosure () throws -> T?,
                         onNotNil: (T, StaticString, UInt) -> Void = {_,_,_ in return}) rethrows -> Bool {
     let e1 = try expression()
     
-    XCTAssertNil(e1, message, file: file, line: line)
+    XCTAssertNil(e1, message(), file: file, line: line)
     if let e = e1 { onNotNil(e, file, line) }
     
     return e1 == nil
@@ -73,12 +73,12 @@ public func XCTAssertsNil<T>(_ expression: @autoclosure () throws -> T?,
                         line: UInt = #line,
                         onNotNil: (T) -> Void) rethrows -> Bool {
     
-    return try XCTAssertsNil(try expression(),
-                             message(),
-                             file: file,
-                             line:line) { val, _, _ in
-        onNotNil(val)
-    }
+    let e1 = try expression()
+    
+    XCTAssertNil(e1, message(), file: file, line: line)
+    if let e = e1 { onNotNil(e) }
+    
+    return e1 == nil
 }
 
 /// Same as its XCTAssert equivilant but will return results from the expression
@@ -89,7 +89,7 @@ public func XCTAssertsNotNil<T>(_ expression: @autoclosure () throws -> T?,
                         line: UInt = #line) rethrows -> T? {
     let e1 = try expression()
     
-    XCTAssertNotNil(e1, message, file: file, line: line)
+    XCTAssertNotNil(e1, message(), file: file, line: line)
     
     return e1
 }

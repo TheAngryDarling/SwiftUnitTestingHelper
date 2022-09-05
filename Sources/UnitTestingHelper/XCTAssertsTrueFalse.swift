@@ -15,7 +15,7 @@ public func XCTAsserts(_ expression: @autoclosure () throws -> Bool,
                         line: UInt = #line) rethrows -> Bool {
     let e1 = try expression()
     
-    XCTAssert(e1, message, file: file, line: line)
+    XCTAssert(e1, message(), file: file, line: line)
     
     return e1
 }
@@ -27,7 +27,7 @@ public func XCTAssertsTrue(_ expression: @autoclosure () throws -> Bool,
                         line: UInt = #line) rethrows -> Bool {
     let e1 = try expression()
     
-    XCTAssertTrue(e1, message, file: file, line: line)
+    XCTAssertTrue(e1, message(), file: file, line: line)
     
     return e1
 }
@@ -40,7 +40,7 @@ public func XCTAssertsFalse(_ expression: @autoclosure () throws -> Bool,
                         line: UInt = #line) rethrows -> Bool {
     let e1 = try expression()
     
-    XCTAssertFalse(e1, message, file: file, line: line)
+    XCTAssertFalse(e1, message(), file: file, line: line)
     
     return !e1
 }
@@ -52,7 +52,7 @@ public func XCTAsserts(_ expression: @autoclosure () throws -> Bool,
                         line: UInt = #line) rethrows -> Bool {
     let e1 = try expression()
     
-    XCTAssert(e1, message, file: file, line: line)
+    XCTAssert(e1, message(), file: file, line: line)
     
     return e1
 }
@@ -64,7 +64,7 @@ public func XCTAssertsTrue(_ expression: @autoclosure () throws -> Bool,
                         line: UInt = #line) rethrows -> Bool {
     let e1 = try expression()
     
-    XCTAssertTrue(e1, message, file: file, line: line)
+    XCTAssertTrue(e1, message(), file: file, line: line)
     
     return e1
 }
@@ -77,7 +77,7 @@ public func XCTAssertsFalse(_ expression: @autoclosure () throws -> Bool,
                         line: UInt = #line) rethrows -> Bool {
     let e1 = try expression()
     
-    XCTAssertFalse(e1, message, file: file, line: line)
+    XCTAssertFalse(e1, message(), file: file, line: line)
     
     return !e1
 }

@@ -17,7 +17,7 @@ public func XCTAssertsEqual<T>(_ expression1: @autoclosure () throws -> T,
     let e1 = try expression1()
     let e2 = try expression2()
     
-    XCTAssertEqual(e1, e2, message, file: file, line: line)
+    XCTAssertEqual(e1, e2, message(), file: file, line: line)
     
     return e1 == e2
 }
@@ -31,7 +31,7 @@ public func XCTAssertsNotEqual<T>(_ expression1: @autoclosure () throws -> T,
     let e1 = try expression1()
     let e2 = try expression2()
     
-    XCTAssertNotEqual(e1, e2, message, file: file, line: line)
+    XCTAssertNotEqual(e1, e2, message(), file: file, line: line)
     
     return e1 != e2
 }
@@ -45,7 +45,7 @@ public func XCTAssertsEqual<T>(_ expression1: @autoclosure () throws -> T,
     let e1 = try expression1()
     let e2 = try expression2()
     
-    XCTAssertEqual(e1, e2, message, file: file, line: line)
+    XCTAssertEqual(e1, e2, message(), file: file, line: line)
     
     return e1 == e2
 }
@@ -59,7 +59,7 @@ public func XCTAssertsNotEqual<T>(_ expression1: @autoclosure () throws -> T,
     let e1 = try expression1()
     let e2 = try expression2()
     
-    XCTAssertNotEqual(e1, e2, message, file: file, line: line)
+    XCTAssertNotEqual(e1, e2, message(), file: file, line: line)
     
     return e1 != e2
 }
