@@ -47,6 +47,8 @@ Provides an extended XCTestCase (XCExtenedTestCase) that gives access to helper 
 >*   **XCTAssertsNotNil**: Similar to the origion but will return results from the expression
 >*   **XCTAssertsNoThrow**: Returns the result of the code block or nil if an error was thrown or a bool if the block results was Void
 >*   **XCTAssertsThrow**: Returns the error that was thrown or nil if no error was thrown
+>*   **XCTAssertsContains**: Tests if a collection contains a condition or element
+>*   **XCTAssertsNotContains**: Tests if a collection does not contain a condition or element
 
 ## Requirements
 

@@ -272,6 +272,12 @@ class UnitTestingHelperTests: XCExtenedTestCase {
         if XCTAssertsNil(Optional<Int>.none) {
             
         }
+        
+        let ary: [Int] = [0,1,2,3,4,5,6,7,8,9,10]
+        XCTAssertsContains(ary, 0)
+        XCTAssertsContains(ary, where: { e in return e == 1 })
+        XCTAssertsNotContains(ary, -1)
+        XCTAssertsNotContains(ary, where: { e in return e == 11 })
     }
     
     func testPrintSeparatorRename() {
