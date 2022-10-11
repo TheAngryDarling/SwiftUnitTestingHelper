@@ -12,6 +12,7 @@ import XCTest
 /// - Parameters:
 ///   - block: The block to execute
 ///   - message: Message to display on thrown error
+///   - errorFormat: Closure used to format the error to display in message
 ///   - file: File of code being called
 ///   - line: Line in code being called
 ///   - onError: Callback to execute when an error is thrown
@@ -19,6 +20,7 @@ import XCTest
 @discardableResult
 public func XCTAssertsNoThrow<T>(_ block: @autoclosure () throws -> T,
                                  _ message: @autoclosure () -> String = "",
+                                 errorFormat: (Error) -> String = { return "\($0)" },
                                  file: StaticString = #filePath,
                                  line: UInt = #line,
                                  onError: (Error, StaticString, UInt) -> Void = { _,_,_ in return }) -> T? {
@@ -31,7 +33,7 @@ public func XCTAssertsNoThrow<T>(_ block: @autoclosure () throws -> T,
             msg = "Test failed with the following error:"
         }
         if !msg.isEmpty { msg += "\n" }
-        msg += "\(error)"
+        msg += errorFormat(error)
         XCTFail(msg, file: file, line: line)
         return nil
     }
@@ -41,6 +43,7 @@ public func XCTAssertsNoThrow<T>(_ block: @autoclosure () throws -> T,
 /// - Parameters:
 ///   - block: The block to execute
 ///   - message: Message to display on thrown error
+///   - errorFormat: Closure used to format the error to display in message
 ///   - file: File of code being called
 ///   - line: Line in code being called
 ///   - onError: Callback to execute when an error is thrown
@@ -48,6 +51,7 @@ public func XCTAssertsNoThrow<T>(_ block: @autoclosure () throws -> T,
 @discardableResult
 public func XCTAssertsNoThrow<T>(_ block: @autoclosure () throws -> T?,
                                  _ message: @autoclosure () -> String = "",
+                                 errorFormat: (Error) -> String = { return "\($0)" },
                                  file: StaticString = #filePath,
                                  line: UInt = #line,
                                  onError: (Error, StaticString, UInt) -> Void = { _,_,_ in return }) -> T? {
@@ -60,7 +64,7 @@ public func XCTAssertsNoThrow<T>(_ block: @autoclosure () throws -> T?,
             msg = "Test failed with the following error:"
         }
         if !msg.isEmpty { msg += "\n" }
-        msg += "\(error)"
+        msg += errorFormat(error)
         XCTFail(msg, file: file, line: line)
         return nil
     }
@@ -70,6 +74,7 @@ public func XCTAssertsNoThrow<T>(_ block: @autoclosure () throws -> T?,
 /// - Parameters:
 ///   - block: The block to execute
 ///   - message: Message to display on thrown error
+///   - errorFormat: Closure used to format the error to display in message
 ///   - file: File of code being called
 ///   - line: Line in code being called
 ///   - onError: Callback to execute when an error is thrown
@@ -77,12 +82,14 @@ public func XCTAssertsNoThrow<T>(_ block: @autoclosure () throws -> T?,
 @discardableResult
 public func XCTAssertsNoThrow<T>(_ block: @autoclosure () throws -> T,
                                  _ message: @autoclosure () -> String = "",
+                                 errorFormat: (Error) -> String = { return "\($0)" },
                                  file: StaticString = #filePath,
                                  line: UInt = #line,
                                  onError: (Error) -> Void) -> T? {
     
     return XCTAssertsNoThrow(try block(),
                              message(),
+                             errorFormat: errorFormat,
                              file: file,
                              line: line) { error, _, _ in
         onError(error)
@@ -93,6 +100,7 @@ public func XCTAssertsNoThrow<T>(_ block: @autoclosure () throws -> T,
 /// - Parameters:
 ///   - block: The block to execute
 ///   - message: Message to display on thrown error
+///   - errorFormat: Closure used to format the error to display in message
 ///   - file: File of code being called
 ///   - line: Line in code being called
 ///   - onError: Callback to execute when an error is thrown
@@ -100,11 +108,13 @@ public func XCTAssertsNoThrow<T>(_ block: @autoclosure () throws -> T,
 @discardableResult
 public func XCTAssertsNoThrow<T>(_ block: @autoclosure () throws -> T?,
                                  _ message: @autoclosure () -> String = "",
+                                 errorFormat: (Error) -> String = { return "\($0)" },
                                  file: StaticString = #filePath,
                                  line: UInt = #line,
                                  onError: (Error) -> Void) -> T? {
     return XCTAssertsNoThrow(try block(),
                              message(),
+                             errorFormat: errorFormat,
                              file: file,
                              line: line) { error, _, _ in
         onError(error)
@@ -115,6 +125,7 @@ public func XCTAssertsNoThrow<T>(_ block: @autoclosure () throws -> T?,
 /// - Parameters:
 ///   - block: The block to execute
 ///   - message: Message to display on thrown error
+///   - errorFormat: Closure used to format the error to display in message
 ///   - file: File of code being called
 ///   - line: Line in code being called
 ///   - onError: Callback to execute when an error is thrown
@@ -122,6 +133,7 @@ public func XCTAssertsNoThrow<T>(_ block: @autoclosure () throws -> T?,
 @discardableResult
 public func XCTAssertsNoThrow(_ block: @autoclosure () throws -> Void,
                               _ message: @autoclosure () -> String = "",
+                              errorFormat: (Error) -> String = { return "\($0)" },
                               file: StaticString = #filePath,
                               line: UInt = #line,
                               onError: (Error, StaticString, UInt) -> Void = { _,_,_ in return }) -> Bool {
@@ -135,7 +147,7 @@ public func XCTAssertsNoThrow(_ block: @autoclosure () throws -> Void,
             msg = "Test failed with the following error:"
         }
         if !msg.isEmpty { msg += "\n" }
-        msg += "\(error)"
+        msg += errorFormat(error)
         XCTFail(msg, file: file, line: line)
         return false
     }
@@ -145,6 +157,7 @@ public func XCTAssertsNoThrow(_ block: @autoclosure () throws -> Void,
 /// - Parameters:
 ///   - block: The block to execute
 ///   - message: Message to display on thrown error
+///   - errorFormat: Closure used to format the error to display in message
 ///   - file: File of code being called
 ///   - line: Line in code being called
 ///   - onError: Callback to execute when an error is thrown
@@ -152,11 +165,13 @@ public func XCTAssertsNoThrow(_ block: @autoclosure () throws -> Void,
 @discardableResult
 public func XCTAssertsNoThrow(_ block: @autoclosure () throws -> Void,
                               _ message: @autoclosure () -> String = "",
+                              errorFormat: (Error) -> String = { return "\($0)" },
                               file: StaticString = #filePath,
                               line: UInt = #line,
                               onError: (Error) -> Void) -> Bool {
     return XCTAssertsNoThrow(try block(),
                              message(),
+                             errorFormat: errorFormat,
                              file: file,
                              line: line) { error, _, _ in
         onError(error)
@@ -216,6 +231,7 @@ public func XCTAssertsThrow<T>(_ block: @autoclosure () throws -> T,
 /// - Parameters:
 ///   - block: The block to execute
 ///   - message: Message to display on thrown error
+///   - errorFormat: Closure used to format the error to display in message
 ///   - file: File of code being called
 ///   - line: Line in code being called
 ///   - onError: Callback to execute when an error is thrown
@@ -223,6 +239,7 @@ public func XCTAssertsThrow<T>(_ block: @autoclosure () throws -> T,
 @discardableResult
 public func XCTAssertsNoThrow<T>(_ block: @autoclosure () throws -> T,
                                  _ message: @autoclosure () -> String = "",
+                                 errorFormat: (Error) -> String = { return "\($0)" },
                                  file: StaticString = #file,
                                  line: UInt = #line,
                                  onError: (Error, StaticString, UInt) -> Void = { _,_,_ in return }) -> T? {
@@ -235,7 +252,7 @@ public func XCTAssertsNoThrow<T>(_ block: @autoclosure () throws -> T,
             msg = "Test failed with the following error:"
         }
         if !msg.isEmpty { msg += "\n" }
-        msg += "\(error)"
+        msg += errorFormat(error)
         XCTFail(msg, file: file, line: line)
         return nil
     }
@@ -245,6 +262,7 @@ public func XCTAssertsNoThrow<T>(_ block: @autoclosure () throws -> T,
 /// - Parameters:
 ///   - block: The block to execute
 ///   - message: Message to display on thrown error
+///   - errorFormat: Closure used to format the error to display in message
 ///   - file: File of code being called
 ///   - line: Line in code being called
 ///   - onError: Callback to execute when an error is thrown
@@ -252,6 +270,7 @@ public func XCTAssertsNoThrow<T>(_ block: @autoclosure () throws -> T,
 @discardableResult
 public func XCTAssertsNoThrow<T>(_ block: @autoclosure () throws -> T?,
                                  _ message: @autoclosure () -> String = "",
+                                 errorFormat: (Error) -> String = { return "\($0)" },
                                  file: StaticString = #file,
                                  line: UInt = #line,
                                  onError: (Error, StaticString, UInt) -> Void = { _,_,_ in return }) -> T? {
@@ -264,7 +283,7 @@ public func XCTAssertsNoThrow<T>(_ block: @autoclosure () throws -> T?,
             msg = "Test failed with the following error:"
         }
         if !msg.isEmpty { msg += "\n" }
-        msg += "\(error)"
+        msg += errorFormat(error)
         XCTFail(msg, file: file, line: line)
         return nil
     }
@@ -274,6 +293,7 @@ public func XCTAssertsNoThrow<T>(_ block: @autoclosure () throws -> T?,
 /// - Parameters:
 ///   - block: The block to execute
 ///   - message: Message to display on thrown error
+///   - errorFormat: Closure used to format the error to display in message
 ///   - file: File of code being called
 ///   - line: Line in code being called
 ///   - onError: Callback to execute when an error is thrown
@@ -281,11 +301,13 @@ public func XCTAssertsNoThrow<T>(_ block: @autoclosure () throws -> T?,
 @discardableResult
 public func XCTAssertsNoThrow<T>(_ block: @autoclosure () throws -> T,
                                  _ message: @autoclosure () -> String = "",
+                                 errorFormat: (Error) -> String = { return "\($0)" },
                                  file: StaticString = #file,
                                  line: UInt = #line,
                                  onError: (Error) -> Void) -> T? {
     return XCTAssertsNoThrow(try block(),
                              message(),
+                             errorFormat: errorFormat,
                              file: file,
                              line: line) { error, _, _ in
         onError(error)
@@ -296,6 +318,7 @@ public func XCTAssertsNoThrow<T>(_ block: @autoclosure () throws -> T,
 /// - Parameters:
 ///   - block: The block to execute
 ///   - message: Message to display on thrown error
+///   - errorFormat: Closure used to format the error to display in message
 ///   - file: File of code being called
 ///   - line: Line in code being called
 ///   - onError: Callback to execute when an error is thrown
@@ -303,11 +326,13 @@ public func XCTAssertsNoThrow<T>(_ block: @autoclosure () throws -> T,
 @discardableResult
 public func XCTAssertsNoThrow<T>(_ block: @autoclosure () throws -> T?,
                                  _ message: @autoclosure () -> String = "",
+                                 errorFormat: (Error) -> String = { return "\($0)" },
                                  file: StaticString = #file,
                                  line: UInt = #line,
                                  onError: (Error) -> Void) -> T? {
     return XCTAssertsNoThrow(try block(),
                              message(),
+                             errorFormat: errorFormat,
                              file: file,
                              line: line) { error, _, _ in
         onError(error)
@@ -318,6 +343,7 @@ public func XCTAssertsNoThrow<T>(_ block: @autoclosure () throws -> T?,
 /// - Parameters:
 ///   - block: The block to execute
 ///   - message: Message to display on thrown error
+///   - errorFormat: Closure used to format the error to display in message
 ///   - file: File of code being called
 ///   - line: Line in code being called
 ///   - onError: Callback to execute when an error is thrown
@@ -325,6 +351,7 @@ public func XCTAssertsNoThrow<T>(_ block: @autoclosure () throws -> T?,
 @discardableResult
 public func XCTAssertsNoThrow(_ block: @autoclosure () throws -> Void,
                               _ message: @autoclosure () -> String = "",
+                              errorFormat: (Error) -> String = { return "\($0)" },
                               file: StaticString = #file,
                               line: UInt = #line,
                               onError: (Error, StaticString, UInt) -> Void = { _,_,_ in return }) -> Bool {
@@ -338,7 +365,7 @@ public func XCTAssertsNoThrow(_ block: @autoclosure () throws -> Void,
             msg = "Test failed with the following error:"
         }
         if !msg.isEmpty { msg += "\n" }
-        msg += "\(error)"
+        msg += errorFormat(error)
         XCTFail(msg, file: file, line: line)
         return false
     }
@@ -348,6 +375,7 @@ public func XCTAssertsNoThrow(_ block: @autoclosure () throws -> Void,
 /// - Parameters:
 ///   - block: The block to execute
 ///   - message: Message to display on thrown error
+///   - errorFormat: Closure used to format the error to display in message
 ///   - file: File of code being called
 ///   - line: Line in code being called
 ///   - onError: Callback to execute when an error is thrown
@@ -355,11 +383,13 @@ public func XCTAssertsNoThrow(_ block: @autoclosure () throws -> Void,
 @discardableResult
 public func XCTAssertsNoThrow(_ block: @autoclosure () throws -> Void,
                               _ message: @autoclosure () -> String = "",
+                              errorFormat: (Error) -> String = { return "\($0)" },
                               file: StaticString = #file,
                               line: UInt = #line,
                               onError: (Error) -> Void) -> Bool {
     return XCTAssertsNoThrow(try block(),
                              message(),
+                             errorFormat: errorFormat,
                              file: file,
                              line: line) { error, _, _ in
         onError(error)
